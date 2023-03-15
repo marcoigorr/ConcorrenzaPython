@@ -1,5 +1,6 @@
 from time import sleep
 
+
 class Reader:
     def __init__(self, book):
         self.book = book

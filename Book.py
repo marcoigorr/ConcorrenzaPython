@@ -1,4 +1,6 @@
 from time import sleep
+
+
 class Book:
     def __init__(self):
         self.__isReading: bool = False
