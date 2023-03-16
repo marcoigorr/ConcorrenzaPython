@@ -1,27 +1,19 @@
-from time import sleep
-
 
 class Book:
     def __init__(self):
         self.__isReading: bool = False
         self.__isWriting: bool = False
 
+    # Get
     def IsReading(self) -> bool:
         return self.__isReading
 
     def IsWriting(self) -> bool:
         return self.__isWriting
 
-    def Reading(self):
-        if not self.__isWriting:
-            print("[+] Is Reading.")
+    # Set
+    def setIsReading(self, boolean) -> None:
+        self.__isReading = boolean
 
-            self.__isReading = True
-
-    def Writing(self):
-        if not self.__isReading and not self.__isWriting:
-            print("[+] Is Writing.")
-
-            self.__isWriting = True
-            sleep(1)
-            self.__isWriting = False
+    def setIsWriting(self, boolean) -> None:
+        self.__isWriting = boolean

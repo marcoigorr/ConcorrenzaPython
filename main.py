@@ -1,12 +1,19 @@
 from Book import Book
 from Reader import Reader
-from threading import Thread
+from Writer import Writer
 
 
 def main():
     book = Book()
-    reader = Reader(book)
-    threadR = Thread(target=reader.Read())
+
+    threadR1 = Reader("Reader1", book)
+    threadW1 = Writer("Writer1", book)
+
+    threadR1.start()
+    threadW1.start()
+
+    threadR1.join()
+    threadW1.join()
 
 
 if __name__ == '__main__':
