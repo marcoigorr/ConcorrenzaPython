@@ -38,9 +38,10 @@ class Writer(Thread):
     def run(self) -> None:
         print(f"[+] Thread {self.name} started!")
         while 1:
-            self.__delay = random.randint(0, 5)
+            self.__delay = random.randint(1, 5)
             sleep(self.__delay)
-            self.Write()
 
-            #sleep(self.__delay)
-            #self.Read()
+            if random.choices([1, 2], weights=(20, 80), k=1)[0] == 1:
+                self.Read()
+            else:
+                self.Write()
