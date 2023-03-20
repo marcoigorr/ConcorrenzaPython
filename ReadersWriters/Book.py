@@ -1,6 +1,5 @@
 class Book:
     def __init__(self):
-        self.__isReading: bool = False
         self.__isWriting: bool = False
         self.__activeReaders: int = 0
 

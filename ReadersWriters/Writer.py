@@ -11,22 +11,17 @@ class Writer(Thread):
         self.__book = book
 
     def Read(self) -> None:
-        while 1:
-            if not self.__book.IsWriting():
-                self.__book.setIsReading(True)
-                self.__book.increaseActiveReaders()
-                print(f"[+] Thread {self.name} Is Reading.")
+        if not self.__book.IsWriting():
+            self.__book.increaseActiveReaders()
+            print(f"[+] Thread {self.name} Is Reading.")
 
-                sleep(self.__delay)
+            sleep(self.__delay)
 
-                if self.__book.getActiveReaders() == 1:
-                    self.__book.setIsReading(False)
-
-                self.__book.decreaseActiveReaders()
-                print(f"[+] Thread {self.name} Finished Reading.")
+            self.__book.decreaseActiveReaders()
+            print(f"[+] Thread {self.name} Finished Reading.")
 
     def Write(self) -> None:
-        if not self.__book.IsReading() and not self.__book.IsWriting():
+        if self.__book.getActiveReaders() == 0 and not self.__book.IsWriting():
             self.__book.setIsWriting(True)
             print(f"[+] Thread {self.name} Is Writing.")
 

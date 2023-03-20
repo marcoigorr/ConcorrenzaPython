@@ -12,14 +12,10 @@ class Reader(Thread):
 
     def Read(self) -> None:
         if not self.__book.IsWriting():
-            self.__book.setIsReading(True)
             self.__book.increaseActiveReaders()
             print(f"[+] Thread {self.name} Is Reading.")
 
-            sleep(self.__delay - 1)
-
-            if self.__book.getActiveReaders() == 1:
-                self.__book.setIsReading(False)
+            sleep(self.__delay)
 
             self.__book.decreaseActiveReaders()
             print(f"[+] Thread {self.name} Finished Reading.")
@@ -27,6 +23,7 @@ class Reader(Thread):
     def run(self) -> None:
         print(f"[+] Thread {self.name} started!")
         while 1:
-            self.__delay = random.randint(2, 5)
+            self.__delay = random.randint(1, 5)
             sleep(self.__delay)
             self.Read()
+            sleep(self.__delay)
