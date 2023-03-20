@@ -2,6 +2,7 @@ from Queue import Queue
 from Barber import Barber
 from Customer import Customer
 
+
 def main() -> None:
     queue = Queue()
     barber = Barber(queue)
@@ -15,6 +16,7 @@ def main() -> None:
     customer2.start()
     customer3.start()
     customer4.start()
+
 
 if __name__ == '__main__':
     main()
