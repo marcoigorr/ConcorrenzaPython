@@ -1,3 +1,7 @@
 # ConcorrenzaPython
 
-Esercizi in python per TPSIT | Gestione risorse con i thread
+Esercizi in python per TPSIT | Gestione concorrenza thread
+
+## Contributori 
+
+Stefani Emanuele
