@@ -1,6 +1,10 @@
+from Manager import Manager
+
+
 class Book:
-    def __init__(self, name, label):
+    def __init__(self, name, manager, label):
         self.__name = name
+        self.manager: Manager = manager
         self.__isWriting: bool = False
         self.__activeReaders: int = 0
         self.__label = label

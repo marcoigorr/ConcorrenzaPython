@@ -16,11 +16,13 @@ class Writer(Thread):
         self.__label: ttk.Label = label
         self.__pb: ttk.Progressbar = pb
 
+    def getBook(self) -> Book:
+        return self.__book
+
     def Read(self) -> None:
         p = 0
         if not self.__book.isWriting():
             self.__book.increaseActiveReaders()
-            print(f"[+] Thread {self.name} Is Reading.")
             self.__label['text'] = f"{self.name} - Reading."
 
             wait = 10
@@ -32,14 +34,12 @@ class Writer(Thread):
                 wait -= 1
 
             self.__book.decreaseActiveReaders()
-            print(f"[+] Thread {self.name} Finished Reading.")
             self.__label['text'] = f"{self.name} - IDLE"
 
     def Write(self) -> None:
         p = 0
         if self.__book.getActiveReaders() == 0 and not self.__book.isWriting():
             self.__book.setIsWriting(True)
-            print(f"[+] Thread {self.name} Is Writing.")
             self.__label['text'] = f"{self.name} - Writing."
 
             wait = 10
@@ -51,18 +51,17 @@ class Writer(Thread):
                 wait -= 1
 
             self.__book.setIsWriting(False)
-            print(f"[+] Thread {self.name} Finished Writing.")
             self.__label['text'] = f"{self.name} - IDLE"
 
     def run(self) -> None:
-        print(f"[+] Thread {self.name} started!")
         self.__label['text'] = f"{self.name} - STARTED"
         while 1:
-            self.__delay = random.randint(1, 5)
+            self.__delay = random.randint(1, 8)
+            sleep(5)
 
             if random.choices([1, 2], weights=(20, 80), k=1)[0] == 1:
-                self.Read()
+                self.__book.manager.addObject(self, "Read")
             else:
-                self.Write()
+                self.__book.manager.addObject(self, "Write")
 
-            sleep(self.__delay)
+

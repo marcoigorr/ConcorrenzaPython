@@ -16,11 +16,13 @@ class Reader(Thread):
         self.__label: ttk.Label = label
         self.__pb: ttk.Progressbar = pb
 
+    def getBook(self) -> Book:
+        return self.__book
+
     def Read(self) -> None:
         p = 0
         if not self.__book.isWriting():
             self.__book.increaseActiveReaders()
-            print(f"[+] Thread {self.name} Is Reading.")
             self.__label['text'] = f"{self.name} - Reading."
 
             wait = 10
@@ -32,14 +34,12 @@ class Reader(Thread):
                 wait -= 1
 
             self.__book.decreaseActiveReaders()
-            print(f"[+] Thread {self.name} Finished Reading.")
             self.__label['text'] = f"{self.name} - IDLE"
 
     def run(self) -> None:
-        print(f"[+] Thread {self.name} started!")
         self.__label['text'] = f"{self.name} - STARTED"
         while 1:
-            self.__delay = random.randint(1, 5)
-            sleep(self.__delay)
-            self.Read()
-            sleep(self.__delay)
+            self.__delay = random.randint(1, 8)
+            sleep(5)
+
+            self.__book.manager.addObject(self, "Read")
