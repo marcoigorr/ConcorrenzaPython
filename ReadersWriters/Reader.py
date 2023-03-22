@@ -1,6 +1,6 @@
 from Book import Book
 
-from threading import Thread
+from threading import Thread, Condition
 from time import sleep
 import random
 
@@ -15,6 +15,8 @@ class Reader(Thread):
         self.__book: Book = book
         self.__label: ttk.Label = label
         self.__pb: ttk.Progressbar = pb
+
+        self.condition: Condition = Condition()
 
     # Get
     def getBook(self) -> Book:
@@ -39,10 +41,15 @@ class Reader(Thread):
 
     def run(self) -> None:
         self.__label['text'] = f"{self.name} - STARTED"
+        sleep(random.randint(1, 5))
+
         while 1:
-            self.__delay = random.randint(1, 3)
-            sleep(5)
+            self.__delay = random.randint(1, 5)
+            sleep(self.__delay)
 
-            self.__book.getManager().addObject(self, "Read")
+            with self.condition:
+                self.__book.getManager().addObject(self, "Read")
 
-            sleep(10)
+                self.condition.wait()
+
+                self.Read()

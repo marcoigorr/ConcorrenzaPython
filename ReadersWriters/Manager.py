@@ -5,7 +5,7 @@ import time
 class Manager(Thread):
     def __init__(self):
         Thread.__init__(self)
-        self.__limit = 10
+        self.__limit = 100
         self.__queue: list = []
 
     # Get
@@ -17,30 +17,30 @@ class Manager(Thread):
             dictionary = {obj: action}
             self.__queue.append(dictionary)
 
-    def run(self) -> None:
-        while 1:
-            elem = self.__queue.pop(0)
-            action = list(elem.values())[0]
-            obj = list(elem.keys())[0]
-            if action == "Read" and not obj.getBook().isWriting():
-                obj.Read()
-
     def run2(self) -> None:
+        while 1:
+            if self.__queue:
+                elem = self.__queue.pop(0)
+                action = list(elem.values())[0]
+                obj = list(elem.keys())[0]
+                if action == "Read" and not obj.getBook().isWriting():
+                    pass
+
+    def run(self) -> None:
         print(f"[+] Manager started!")
         while 1:
             if self.__queue:
-                time.sleep(.5)
-                print(self.__queue)
                 elem = self.__queue[0]
-
                 obj = list(elem.keys())[0]
                 action = list(elem.values())[0]
 
                 if action == "Read" and not obj.getBook().isWriting():
-                    obj.Read()
+                    with obj.condition:
+                        obj.condition.notifyAll()
                     self.__queue.pop(0)
                     print(f"[+] Removed {obj} - {action}")
                 elif action == "Write" and not obj.getBook().isWriting() and obj.getBook().getActiveReaders() == 0:
-                    obj.Write()
+                    with obj.condition:
+                        obj.condition.notifyAll()
                     self.__queue.pop(0)
                     print(f"[+] Removed {obj} - {action}")

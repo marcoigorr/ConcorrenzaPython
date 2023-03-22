@@ -1,6 +1,6 @@
 from Book import Book
 
-from threading import Thread
+from threading import Thread, Condition
 from time import sleep
 import random
 
@@ -15,6 +15,8 @@ class Writer(Thread):
         self.__book: Book = book
         self.__label: ttk.Label = label
         self.__pb: ttk.Progressbar = pb
+
+        self.condition: Condition = Condition()
 
     # Get
     def getBook(self) -> Book:
@@ -42,13 +44,23 @@ class Writer(Thread):
 
     def run(self) -> None:
         self.__label['text'] = f"{self.name} - STARTED"
+        sleep(random.randint(1, 5))
+
         while 1:
-            self.__delay = random.randint(1, 3)
-            sleep(5)
+            self.__delay = random.randint(1, 5)
+            sleep(self.__delay)
 
-            if random.choices([1, 2], weights=(20, 80), k=1)[0] == 1:
-                self.__book.getManager().addObject(self, "Read")
-            else:
-                self.__book.getManager().addObject(self, "Write")
+            with self.condition:
+                if random.choices([1, 2], weights=(20, 80), k=1)[0] == 1:
+                    action = "Read"
+                else:
+                    action = "Write"
 
-            sleep(10)
+                self.__book.getManager().addObject(self, action)
+
+                self.condition.wait()
+
+                if action == "Write":
+                    self.Write()
+                else:
+                    self.Read()
