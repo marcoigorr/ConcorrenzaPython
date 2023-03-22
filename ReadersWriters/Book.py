@@ -49,6 +49,7 @@ class Book:
             self.increaseActiveReaders()
             reader.setLabel(f"{reader.name} - Reading.")
 
+            # Progression bar takes "delay" seconds to complete
             wait = 10
             while wait > 0:
                 p = (p + 10) % 100
@@ -66,6 +67,7 @@ class Book:
             self.setIsWriting(True)
             writer.setLabel(f"{writer.name} - Writing.")
 
+            # Progression bar takes "delay" seconds to complete
             wait = 10
             while wait > 0:
                 p = (p + 10) % 100

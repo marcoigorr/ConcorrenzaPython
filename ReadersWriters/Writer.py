@@ -47,16 +47,18 @@ class Writer(Thread):
         sleep(random.randint(1, 5))
 
         while 1:
-            self.__delay = random.randint(1, 5)
+            self.__delay = random.randint(3, 7)
             sleep(self.__delay)
 
             with self.condition:
+                # Choose randomly the action
                 if random.choices([1, 2], weights=(20, 80), k=1)[0] == 1:
                     action = "Read"
                 else:
                     action = "Write"
 
-                self.__book.getManager().addObject(self, action)
+                # Add self to queue and wait for manager to call notify-all()
+                self.__book.getManager().Enqueue(self, action)
 
                 self.condition.wait()
 

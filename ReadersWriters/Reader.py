@@ -48,7 +48,8 @@ class Reader(Thread):
             sleep(self.__delay)
 
             with self.condition:
-                self.__book.getManager().addObject(self, "Read")
+                # Add self to queue and wait for manager to call notify-all()
+                self.__book.getManager().Enqueue(self, "Read")
 
                 self.condition.wait()
 
