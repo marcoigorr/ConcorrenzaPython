@@ -11,35 +11,38 @@ class Reader(Thread):
     def __init__(self, thread_name, book, label, pb):
         Thread.__init__(self, name=thread_name)
 
-        self.__delay = 0
+        self.__delay: int = 0
         self.__book: Book = book
         self.__label: ttk.Label = label
         self.__pb: ttk.Progressbar = pb
 
+    # Get
     def getBook(self) -> Book:
         return self.__book
 
+    def getDelay(self) -> int:
+        return self.__delay
+
+    def getLabel(self) -> ttk.Label:
+        return self.__label
+
+    def getProgressBar(self) -> ttk.Progressbar:
+        return self.__pb
+
+    # Set
+    def setLabel(self, newLabel) -> None:
+        self.__label['text'] = newLabel
+
+    # main
     def Read(self) -> None:
-        p = 0
-        if not self.__book.isWriting():
-            self.__book.increaseActiveReaders()
-            self.__label['text'] = f"{self.name} - Reading."
-
-            wait = 10
-            while wait > 0:
-                p = (p + 10) % 100
-                self.__pb['value'] = p
-                self.__pb.update_idletasks()
-                sleep(self.__delay / 10)
-                wait -= 1
-
-            self.__book.decreaseActiveReaders()
-            self.__label['text'] = f"{self.name} - IDLE"
+        self.__book.Read(reader=self, delay=self.__delay)
 
     def run(self) -> None:
         self.__label['text'] = f"{self.name} - STARTED"
         while 1:
-            self.__delay = random.randint(1, 8)
+            self.__delay = random.randint(1, 3)
             sleep(5)
 
-            self.__book.manager.addObject(self, "Read")
+            self.__book.getManager().addObject(self, "Read")
+
+            sleep(10)

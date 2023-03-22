@@ -11,57 +11,44 @@ class Writer(Thread):
     def __init__(self, thread_name, book, label, pb):
         Thread.__init__(self, name=thread_name)
 
-        self.__delay = 0
+        self.__delay: int = 0
         self.__book: Book = book
         self.__label: ttk.Label = label
         self.__pb: ttk.Progressbar = pb
 
+    # Get
     def getBook(self) -> Book:
         return self.__book
 
-    def Read(self) -> None:
-        p = 0
-        if not self.__book.isWriting():
-            self.__book.increaseActiveReaders()
-            self.__label['text'] = f"{self.name} - Reading."
+    def getDelay(self) -> int:
+        return self.__delay
 
-            wait = 10
-            while wait > 0:
-                p = (p + 10) % 100
-                self.__pb['value'] = p
-                self.__pb.update_idletasks()
-                sleep(self.__delay / 10)
-                wait -= 1
+    def getLabel(self) -> ttk.Label:
+        return self.__label
 
-            self.__book.decreaseActiveReaders()
-            self.__label['text'] = f"{self.name} - IDLE"
+    def getProgressBar(self) -> ttk.Progressbar:
+        return self.__pb
 
+    # Set
+    def setLabel(self, newLabel) -> None:
+        self.__label['text'] = newLabel
+
+    # main
     def Write(self) -> None:
-        p = 0
-        if self.__book.getActiveReaders() == 0 and not self.__book.isWriting():
-            self.__book.setIsWriting(True)
-            self.__label['text'] = f"{self.name} - Writing."
+        self.__book.Write(writer=self, delay=self.__delay)
 
-            wait = 10
-            while wait > 0:
-                p = (p + 10) % 100
-                self.__pb['value'] = p
-                self.__pb.update_idletasks()
-                sleep(self.__delay / 10)
-                wait -= 1
-
-            self.__book.setIsWriting(False)
-            self.__label['text'] = f"{self.name} - IDLE"
+    def Read(self) -> None:
+        self.__book.Read(reader=self, delay=self.__delay)
 
     def run(self) -> None:
         self.__label['text'] = f"{self.name} - STARTED"
         while 1:
-            self.__delay = random.randint(1, 8)
+            self.__delay = random.randint(1, 3)
             sleep(5)
 
             if random.choices([1, 2], weights=(20, 80), k=1)[0] == 1:
-                self.__book.manager.addObject(self, "Read")
+                self.__book.getManager().addObject(self, "Read")
             else:
-                self.__book.manager.addObject(self, "Write")
+                self.__book.getManager().addObject(self, "Write")
 
-
+            sleep(10)

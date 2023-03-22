@@ -18,12 +18,11 @@ def main():
     people = []
 
     manager = Manager()
+    people.append(manager)
 
     label = ttk.Label(root, text="Book", width=20, font=("Colibri", 16))
     label.grid(row=readers+writers+2, column=1, padx=10, pady=5)
     book = Book("Book", manager, label)
-
-    people.append(manager)
 
     for i in range(readers):
         # Readers
