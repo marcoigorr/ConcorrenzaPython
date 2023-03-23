@@ -6,7 +6,7 @@ import time
 class Manager(Thread):
     def __init__(self):
         Thread.__init__(self)
-        self.__limit = 10
+        self.__limit = 10  # not used
         self.__queue: list = []
 
     # Get
