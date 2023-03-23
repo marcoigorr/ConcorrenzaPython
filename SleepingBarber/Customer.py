@@ -2,6 +2,7 @@ from threading import Thread
 import random
 import time
 
+
 class Customer(Thread):
     def __init__(self, thread_name, queue, barber):
         Thread.__init__(self, name=thread_name)

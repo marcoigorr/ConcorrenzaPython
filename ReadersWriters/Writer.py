@@ -1,6 +1,6 @@
 from Book import Book
 
-from threading import Thread
+from threading import Thread, Condition
 from time import sleep
 import random
 
@@ -11,58 +11,58 @@ class Writer(Thread):
     def __init__(self, thread_name, book, label, pb):
         Thread.__init__(self, name=thread_name)
 
-        self.__delay = 0
+        self.__delay: int = 0
         self.__book: Book = book
         self.__label: ttk.Label = label
         self.__pb: ttk.Progressbar = pb
 
-    def Read(self) -> None:
-        p = 0
-        if not self.__book.isWriting():
-            self.__book.increaseActiveReaders()
-            print(f"[+] Thread {self.name} Is Reading.")
-            self.__label['text'] = f"{self.name} - Reading."
+        self.condition: Condition = Condition()
 
-            wait = 10
-            while wait > 0:
-                p = (p + 10) % 100
-                self.__pb['value'] = p
-                self.__pb.update_idletasks()
-                sleep(self.__delay / 10)
-                wait -= 1
+    # Get
+    def getBook(self) -> Book:
+        return self.__book
 
-            self.__book.decreaseActiveReaders()
-            print(f"[+] Thread {self.name} Finished Reading.")
-            self.__label['text'] = f"{self.name} - IDLE"
+    def getDelay(self) -> int:
+        return self.__delay
 
+    def getLabel(self) -> ttk.Label:
+        return self.__label
+
+    def getProgressBar(self) -> ttk.Progressbar:
+        return self.__pb
+
+    # Set
+    def setLabel(self, newLabel) -> None:
+        self.__label['text'] = newLabel
+
+    # main
     def Write(self) -> None:
-        p = 0
-        if self.__book.getActiveReaders() == 0 and not self.__book.isWriting():
-            self.__book.setIsWriting(True)
-            print(f"[+] Thread {self.name} Is Writing.")
-            self.__label['text'] = f"{self.name} - Writing."
+        self.__book.Write(writer=self, delay=self.__delay)
 
-            wait = 10
-            while wait > 0:
-                p = (p + 10) % 100
-                self.__pb['value'] = p
-                self.__pb.update_idletasks()
-                sleep(self.__delay / 10)
-                wait -= 1
-
-            self.__book.setIsWriting(False)
-            print(f"[+] Thread {self.name} Finished Writing.")
-            self.__label['text'] = f"{self.name} - IDLE"
+    def Read(self) -> None:
+        self.__book.Read(reader=self, delay=self.__delay)
 
     def run(self) -> None:
-        print(f"[+] Thread {self.name} started!")
         self.__label['text'] = f"{self.name} - STARTED"
+        sleep(random.randint(1, 5))
+
         while 1:
-            self.__delay = random.randint(1, 5)
-
-            if random.choices([1, 2], weights=(20, 80), k=1)[0] == 1:
-                self.Read()
-            else:
-                self.Write()
-
+            self.__delay = random.randint(3, 7)
             sleep(self.__delay)
+
+            with self.condition:
+                # Choose randomly the action
+                if random.choices([1, 2], weights=(20, 80), k=1)[0] == 1:
+                    action = "Read"
+                else:
+                    action = "Write"
+
+                # Add self to queue and wait for manager to call notify-all()
+                self.__book.getManager().Enqueue(self, action)
+
+                self.condition.wait()
+
+                if action == "Write":
+                    self.Write()
+                else:
+                    self.Read()
