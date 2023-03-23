@@ -9,7 +9,7 @@ from tkinter import ttk
 
 def main():
     root = tk.Tk()
-    root.geometry('900x600')
+    root.geometry('800x500')
     root.title('Readers Writers')
     root.grid()
 

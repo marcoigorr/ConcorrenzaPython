@@ -22,7 +22,7 @@ class Manager(Thread):
             self.__queue.append(dictionary)
 
     def UpdateInfo(self) -> None:
-        os.system("cls")
+        os.system("cls")  # edit configuration and tick "Emulate Terminal in output console"
         print(f"[+] Queue: ")
         for i in range(len(self.__queue)):
             threadName = list(self.__queue[i].keys())[0].name
@@ -33,7 +33,7 @@ class Manager(Thread):
 
         while 1:
             self.UpdateInfo()
-            time.sleep(.5)
+            time.sleep(.3)
 
             # If queue is not empty
             if self.__queue:
