@@ -7,7 +7,7 @@ Il primo è conosciuto come problema di lettori e scrittori. Supponete che una r
 - Se almeno un lettore sta leggendo dalla risorsa, nessun processo può agire in scrittura finchè il lettore non ha terminato. Più lettori possono leggere contemporaneamente dalla risorsa.
 - Se uno scrittore sta scrivendo, nessun altro processo può nè leggere nè scrivere dalla risorsa finchè lo scrittore non ha terminato.
 
-### BarberShop
+### SleepingBarber
 Il secondo problema (più complicato) è il problema del barbiere addormentato. Immaginate il negozio di un barbiere, con una singola sedia per il taglio e una sala di attesa con n sedie. Vengono applicate le seguenti regole:
 - Se non ci sono clienti, il barbiere si addormenta.
 - Quando arriva un cliente, se il barbiere sta dormendo deve essere svegliato (dal cliente).
