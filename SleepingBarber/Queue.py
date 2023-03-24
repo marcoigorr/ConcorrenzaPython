@@ -1,15 +1,17 @@
 class Queue:
     def __init__(self):
-        self.chairs = []
+        self.limit: int = 4
+        self.chairs: list = []
 
-    def isEmpty(self) -> bool:
+    def IsEmpty(self) -> bool:
         return self.chairs == []
 
-    def addCustomer(self, customer) -> bool:
-        if not len(self.chairs) == 4:
-            self.chairs.append(customer.name)
-            return True
-        return False
+    def Enter(self, customer) -> bool:
+        if len(self.chairs) == self.limit:
+            return False
 
-    def getNextCustomer(self) -> None:
-        self.chairs.pop(0)
+        if customer in self.chairs:
+            return False
+
+        self.chairs.append(customer)
+        return True

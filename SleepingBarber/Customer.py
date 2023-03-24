@@ -1,22 +1,25 @@
+from Queue import Queue
+from Barber import Barber
+
 from threading import Thread
 import random
 import time
 
 
 class Customer(Thread):
-    def __init__(self, thread_name, queue, barber):
+    def __init__(self, thread_name, barber):
         Thread.__init__(self, name=thread_name)
-        self.queue = queue
-        self.barber = barber
+        self.barber: Barber = barber
+
+        self.queue: Queue = self.barber.queue  # get barber's queue
 
     def run(self) -> None:
         while 1:
-            if not self.name in self.queue.chairs:
-                time.sleep(random.randint(5,10))
+            time.sleep(random.randint(2, 10))
 
-                if not self.queue.addCustomer(self):
-                    print(f"[+] {self.name} found no empty chairs.")
-                print(f"[+] {self.name} entered queue.")
-                print(f"    Queue: {self.queue.chairs}")
-                if self.barber.isSleeping:
-                    self.barber.WakeUp()
+            self.queue.Enter(self)
+
+            if self.barber.isSleeping:
+                self.barber.WakeUp()
+
+            time.sleep(3)

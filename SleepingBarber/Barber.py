@@ -1,35 +1,46 @@
+import os
+
+from Queue import Queue
+
+from threading import Thread, Condition
 import random
-from threading import Thread, Event
 import time
 
 class Barber(Thread):
     def __init__(self, queue):
         Thread.__init__(self)
-        self.queue = queue
-        self.flag = Event()
-        self.isSleeping = True
+        self.queue: Queue = queue
+
+        self.isSleeping: bool = True
+        self.condition: Condition = Condition()
 
     def Sleep(self) -> None:
-        self.isSleeping = True
-        print(f"[+] Barber has fallen asleep.")
-        while self.isSleeping:
-            pass
+        with self.condition:
+            self.isSleeping = True
+            print(f"[+] Barber is sleeping")
+            self.condition.wait()
 
     def WakeUp(self) -> None:
-        self.isSleeping = False
-        print(f"[+] Barber woke up.")
+        with self.condition:
+            self.isSleeping = False
+            self.condition.notifyAll()
 
     def Work(self) -> None:
-        customer = self.queue.chairs[0]
+        customer = self.queue.chairs[0].name
         print(f"[+] Working on {customer}.")
-        self.queue.getNextCustomer()
-        print(f"    Updated queue: {self.queue.chairs}")
+        time.sleep(random.randint(1, 2))
 
-        time.sleep(random.randint(1,2))
+        self.queue.chairs.pop(0)
+
 
     def run(self) -> None:
         while 1:
-            if self.queue.isEmpty():
+            os.system("cls")
+            print(f"[+] Barber sleeping -> {self.isSleeping}")
+            print(f"[+] Queue -> {[self.queue.chairs[i].name for i in range(len(self.queue.chairs))]}")
+
+            if self.queue.IsEmpty():
                 self.Sleep()
             else:
                 self.Work()
+
