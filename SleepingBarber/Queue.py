@@ -2,8 +2,8 @@ import os
 
 
 class Queue:
-    def __init__(self):
-        self.limit: int = 5
+    def __init__(self, limit):
+        self.limit: int = limit
         self.chairs: list = []
 
     def IsEmpty(self) -> bool:

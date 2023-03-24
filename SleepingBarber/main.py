@@ -4,7 +4,7 @@ from Customer import Customer
 
 
 def main() -> None:
-    queue: Queue = Queue()
+    queue: Queue = Queue(limit=5)
     barber: Barber = Barber(queue)
 
     threads = [barber]
