@@ -1,7 +1,6 @@
 from Queue import Queue
 
 from threading import Thread, Condition
-import os
 import random
 import time
 

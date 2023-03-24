@@ -1,6 +1,6 @@
 class Queue:
     def __init__(self):
-        self.limit: int = 10
+        self.limit: int = 5
         self.chairs: list = []
 
     def IsEmpty(self) -> bool:
