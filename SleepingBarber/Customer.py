@@ -17,7 +17,8 @@ class Customer(Thread):
         while 1:
             time.sleep(random.randint(2, 4))
 
-            self.queue.Enter(self)
+            if self.queue.Enter(self):
+                self.queue.UpdateQueue()  # print queue
 
             if self.barber.isSleeping:
                 self.barber.WakeUp()

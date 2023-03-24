@@ -31,13 +31,11 @@ class Barber(Thread):
 
             self.queue.chairs.pop(0)
 
-            os.system("cls")
-            print(f"[+] Queue -> {[self.queue.chairs[i].name for i in range(len(self.queue.chairs))]}")
+            self.queue.UpdateQueue()  # print queue
 
     def run(self) -> None:
         while 1:
-            os.system("cls")
-            print(f"[+] Queue -> {[self.queue.chairs[i].name for i in range(len(self.queue.chairs))]}")
+            self.queue.UpdateQueue()  # print queue
 
             if self.queue.IsEmpty():
                 self.Sleep()
