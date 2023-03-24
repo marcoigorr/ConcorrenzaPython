@@ -1,8 +1,7 @@
-import os
-
 from Queue import Queue
 
 from threading import Thread, Condition
+import os
 import random
 import time
 
@@ -26,17 +25,19 @@ class Barber(Thread):
             self.condition.notifyAll()
 
     def Work(self) -> None:
-        customer = self.queue.chairs[0].name
-        print(f"[+] Working on {customer}.")
-        time.sleep(random.randint(1, 2))
+        while not self.queue.IsEmpty():
+            customer = self.queue.chairs[0].name
+            print(f"[+] Working on {customer}.")
+            time.sleep(random.randint(1, 2))
 
-        self.queue.chairs.pop(0)
+            self.queue.chairs.pop(0)
 
+            os.system("cls")
+            print(f"[+] Queue -> {[self.queue.chairs[i].name for i in range(len(self.queue.chairs))]}")
 
     def run(self) -> None:
         while 1:
             os.system("cls")
-            print(f"[+] Barber sleeping -> {self.isSleeping}")
             print(f"[+] Queue -> {[self.queue.chairs[i].name for i in range(len(self.queue.chairs))]}")
 
             if self.queue.IsEmpty():

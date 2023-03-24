@@ -6,22 +6,16 @@ from Customer import Customer
 def main() -> None:
     queue: Queue = Queue()
     barber: Barber = Barber(queue)
-    customer1: Customer = Customer("Gino", barber)
-    customer2: Customer = Customer("Pippo", barber)
-    customer3: Customer = Customer("Zorzi", barber)
-    customer4: Customer = Customer("Cani", barber)
-    customer5: Customer = Customer("Gatti", barber)
-    customer6: Customer = Customer("Topi", barber)
-    customer7: Customer = Customer("Cicogne", barber)
 
-    barber.start()
-    customer1.start()
-    customer2.start()
-    customer3.start()
-    customer4.start()
-    customer5.start()
-    #customer6.start()
-    #customer7.start()
+    threads = [barber]
+    names = ['Pino', 'Beppe', 'Zorzi', 'Ciscogna', 'Topi', 'Cani', 'Polli']
+
+    for name in names:
+        customer = Customer(name, barber)
+        threads.append(customer)
+
+    for thread in threads:
+        thread.start()
 
 
 if __name__ == '__main__':

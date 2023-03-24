@@ -15,11 +15,11 @@ class Customer(Thread):
 
     def run(self) -> None:
         while 1:
-            time.sleep(random.randint(2, 10))
+            time.sleep(random.randint(2, 4))
 
             self.queue.Enter(self)
 
             if self.barber.isSleeping:
                 self.barber.WakeUp()
 
-            time.sleep(3)
+            time.sleep(10)
